@@ -89,7 +89,24 @@ class FamilyTreeKludger:
         :return: Python dict, containing the requested node (but also
         all of that node's descendants (if any), in the "children" field.
         """
+        searchTuple = None
+        if type(id) == str:
+            searchTuple = (int(id), id)
+        elif type(id) == int:
+            searchTuple = (id, repr(id))
+        else:
+            searchTuple = (id,)     #Good luck with that!
 
+        if node["id"] in searchTuple:
+            return node
+        else:
+            for n in node["children"]:
+                result = self.findNode(id, n)
+                if result:
+                    return result
+
+            #If we got this far, we've reached a dead end.
+            return None
 
 
 if __name__ == "__main__":
